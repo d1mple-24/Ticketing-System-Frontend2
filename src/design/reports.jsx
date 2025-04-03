@@ -103,7 +103,7 @@ const ReportsPage = () => {
         <Col xs={12} md={8} className="mb-4">
           <Paper elevation={3} className="p-4 rounded shadow-sm">
             <Typography variant="h6" className="fw-bold text-dark mb-3">
-              📈 Ticket Trends
+              📈 Ticket Category
             </Typography>
             <div style={{ height: isMobile ? 280 : 400 }}>
               <Line
