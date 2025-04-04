@@ -246,6 +246,11 @@ const AdminPage = () => {
   const handleMenuClick = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
 
+  const handleSettingsClick = () => {
+    setActiveTab(3); // Navigate to Settings tab
+    handleMenuClose();
+  };
+
   const ticketStats = [
     { title: 'Total Tickets', count: '112', icon: <TicketIcon />, color: '#1976d2', trend: '+12%', trendUp: true },
     { title: 'Pending', count: '92', icon: <PendingIcon />, color: '#ed6c02', trend: '+8%', trendUp: true },
@@ -545,7 +550,7 @@ const AdminPage = () => {
               transformOrigin={{ horizontal: 'right', vertical: 'top' }}
               anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             >
-              <MenuItem onClick={handleMenuClose}>
+              <MenuItem onClick={handleSettingsClick}>
                 <SettingsIcon fontSize="small" sx={{ mr: 1.5, color: '#64748b' }} />Settings
               </MenuItem>
               <Divider />
