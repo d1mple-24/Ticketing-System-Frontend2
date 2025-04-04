@@ -14,7 +14,13 @@ import {
   Divider,
   AppBar,
   Toolbar,
-  Tooltip
+  Tooltip,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
 } from '@mui/material';
 import {
   Search as SearchIcon,
@@ -30,6 +36,102 @@ import {
 import { Line, Bar } from 'react-chartjs-2';
 import * as XLSX from 'xlsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+const DetailedBreakdown = () => {
+  const rows = [
+    { category: 'Account Management', pending: 10, inProgress: 0, resolved: 1, archived: 2, total: 13 },
+    { category: 'Document Upload', pending: 24, inProgress: 2, resolved: 1, archived: 3, total: 30 },
+    { category: 'Technical Assistance', pending: 8, inProgress: 0, resolved: 0, archived: 3, total: 11 },
+    { category: 'Troubleshooting', pending: 50, inProgress: 4, resolved: 0, archived: 2, total: 56 }
+  ];
+
+  return (
+    <Box sx={{ mt: 4 }}>
+      <Typography variant="h5" sx={{ mb: 3, fontWeight: 600, color: '#2d3436' }}>
+        Detailed Breakdown
+      </Typography>
+      <TableContainer component={Paper} elevation={0} sx={{ 
+        border: '1px solid #e0e0e0',
+        borderRadius: 1,
+        overflow: 'hidden'
+      }}>
+        <Table sx={{ minWidth: 650 }}>
+          <TableHead>
+            <TableRow sx={{ bgcolor: '#f8f9fa' }}>
+              <TableCell sx={{ 
+                fontWeight: 600, 
+                color: '#2d3436',
+                fontSize: '0.875rem',
+                borderBottom: '2px solid #e0e0e0'
+              }}>
+                Category
+              </TableCell>
+              <TableCell align="center" sx={{ 
+                fontWeight: 600, 
+                color: '#2d3436',
+                fontSize: '0.875rem',
+                borderBottom: '2px solid #e0e0e0'
+              }}>
+                Pending
+              </TableCell>
+              <TableCell align="center" sx={{ 
+                fontWeight: 600, 
+                color: '#2d3436',
+                fontSize: '0.875rem',
+                borderBottom: '2px solid #e0e0e0'
+              }}>
+                In Progress
+              </TableCell>
+              <TableCell align="center" sx={{ 
+                fontWeight: 600, 
+                color: '#2d3436',
+                fontSize: '0.875rem',
+                borderBottom: '2px solid #e0e0e0'
+              }}>
+                Resolved
+              </TableCell>
+              <TableCell align="center" sx={{ 
+                fontWeight: 600, 
+                color: '#2d3436',
+                fontSize: '0.875rem',
+                borderBottom: '2px solid #e0e0e0'
+              }}>
+                Archived
+              </TableCell>
+              <TableCell align="center" sx={{ 
+                fontWeight: 600, 
+                color: '#2d3436',
+                fontSize: '0.875rem',
+                borderBottom: '2px solid #e0e0e0'
+              }}>
+                Total
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow
+                key={row.category}
+                sx={{ 
+                  '&:last-child td, &:last-child th': { border: 0 }
+                }}
+              >
+                <TableCell component="th" scope="row" sx={{ color: '#2d3436', fontWeight: 500 }}>
+                  {row.category}
+                </TableCell>
+                <TableCell align="center" sx={{ color: '#ed6c02', fontWeight: 500 }}>{row.pending}</TableCell>
+                <TableCell align="center" sx={{ color: '#0288d1', fontWeight: 500 }}>{row.inProgress}</TableCell>
+                <TableCell align="center" sx={{ color: '#2e7d32', fontWeight: 500 }}>{row.resolved}</TableCell>
+                <TableCell align="center" sx={{ color: '#64748b', fontWeight: 500 }}>{row.archived}</TableCell>
+                <TableCell align="center" sx={{ color: '#1e293b', fontWeight: 600 }}>{row.total}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+};
 
 const ReportsPage = () => {
   const theme = useTheme();
@@ -110,13 +212,7 @@ const ReportsPage = () => {
   };
 
   return (
-    <Box sx={{ 
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      overflow: 'hidden',
-      bgcolor: '#f8f9fa'
-    }}>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       {/* Fixed Header */}
       <AppBar 
         position="static" 
@@ -267,13 +363,6 @@ const ReportsPage = () => {
               <Paper 
                 elevation={0}
                 className="p-3 rounded-3 border h-100"
-                sx={{
-                  transition: 'all 0.2s ease',
-                  '&:hover': {
-                    transform: 'translateY(-2px)',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                  }
-                }}
               >
                 <Box className="d-flex align-items-center mb-2">
                   <Box 
@@ -310,12 +399,6 @@ const ReportsPage = () => {
             <Paper 
               elevation={0} 
               className="p-4 rounded-3 border h-100"
-              sx={{
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                }
-              }}
             >
               <Typography variant="h6" className="fw-bold text-dark mb-3">
                 📈 Ticket Count by Status
@@ -360,12 +443,6 @@ const ReportsPage = () => {
             <Paper 
               elevation={0} 
               className="p-4 rounded-3 border h-100"
-              sx={{
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                }
-              }}
             >
               <Typography variant="h6" className="fw-bold text-dark mb-3">
                 ⏳ Resolution Time
@@ -401,6 +478,9 @@ const ReportsPage = () => {
             </Paper>
           </Col>
         </Row>
+
+        {/* Add the DetailedBreakdown component at the bottom */}
+        <DetailedBreakdown />
       </Container>
     </Box>
   );

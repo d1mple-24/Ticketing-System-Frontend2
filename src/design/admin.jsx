@@ -40,7 +40,8 @@ import {
   Email as EmailIcon,
   Security as SecurityIcon,
   Language as LanguageIcon,
-  Palette as PaletteIcon
+  Palette as PaletteIcon,
+  ExpandMore as ExpandMoreIcon
 } from "@mui/icons-material";
 import { Bar, Pie } from 'react-chartjs-2';
 import {
@@ -73,11 +74,10 @@ ChartJS.register(
 
 // Add Settings component
 const SettingsPage = () => {
-  const [notifications, setNotifications] = useState(true);
-  const [emailAlerts, setEmailAlerts] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-  const [language, setLanguage] = useState('en');
-  const [timezone, setTimezone] = useState('UTC+8');
+  const [systemName, setSystemName] = useState('Ticket Management System');
+  const [ticketExpiry, setTicketExpiry] = useState('30');
+  const [defaultPriority, setDefaultPriority] = useState('Medium');
+  const [allowGuestTickets, setAllowGuestTickets] = useState(true);
 
   return (
     <Box sx={{ 
@@ -85,151 +85,191 @@ const SettingsPage = () => {
       display: 'flex',
       flexDirection: 'column'
     }}>
-      <Typography variant="h5" sx={{ mb: 1.5, fontWeight: 600, color: '#2d3436' }}>
-        Settings
-      </Typography>
-      
-      <Box sx={{ 
-        flex: 1,
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column'
+      <Box sx={{
+        position: 'sticky',
+        top: 0,
+        bgcolor: '#f8f9fa',
+        pt: 2,
+        pb: 2,
+        zIndex: 1
       }}>
-        <Grid container spacing={1.5}>
-          {/* Notification Settings */}
-          <Grid item xs={12} md={6}>
-            <Paper elevation={0} sx={{ p: 3, borderRadius: 1, border: '1px solid #e0e0e0' }}>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#2d3436' }}>
-                <NotificationsActiveIcon sx={{ mr: 1, color: '#1976d2' }} />
-                Notifications
+        <Typography variant="h4" sx={{ fontWeight: 600, color: '#2d3436' }}>
+          System Settings
         </Typography>
-              <List>
-                <ListItem>
-                  <ListItemIcon>
-                    <NotificationsIcon sx={{ color: '#64748b' }} />
-                  </ListItemIcon>
-                  <ListItemText 
-                    primary="Push Notifications" 
-                    secondary="Receive notifications for new tickets and updates"
-                  />
-                  <Switch
-                    checked={notifications}
-                    onChange={(e) => setNotifications(e.target.checked)}
-                    color="primary"
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <EmailIcon sx={{ color: '#64748b' }} />
-                  </ListItemIcon>
-                  <ListItemText 
-                    primary="Email Alerts" 
-                    secondary="Get email notifications for important updates"
-                  />
-                  <Switch
-                    checked={emailAlerts}
-                    onChange={(e) => setEmailAlerts(e.target.checked)}
-                    color="primary"
-                  />
-                </ListItem>
-              </List>
-            </Paper>
-          </Grid>
-
-          {/* Appearance Settings */}
-          <Grid item xs={12} md={6}>
-            <Paper elevation={0} sx={{ p: 3, borderRadius: 1, border: '1px solid #e0e0e0' }}>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#2d3436' }}>
-                <PaletteIcon sx={{ mr: 1, color: '#1976d2' }} />
-                Appearance
-              </Typography>
-              <List>
-                <ListItem>
-                  <ListItemIcon>
-                    <PaletteIcon sx={{ color: '#64748b' }} />
-                  </ListItemIcon>
-                  <ListItemText 
-                    primary="Dark Mode" 
-                    secondary="Switch between light and dark theme"
-                  />
-                  <Switch
-                    checked={darkMode}
-                    onChange={(e) => setDarkMode(e.target.checked)}
-                    color="primary"
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemIcon>
-                    <LanguageIcon sx={{ color: '#64748b' }} />
-                  </ListItemIcon>
-                  <ListItemText 
-                    primary="Language" 
-                    secondary="Select your preferred language"
-                  />
-                  <TextField
-                    select
-                    value={language}
-                    onChange={(e) => setLanguage(e.target.value)}
-                    size="small"
-                    sx={{ minWidth: 120 }}
-                  >
-                    <MenuItem value="en">English</MenuItem>
-                    <MenuItem value="es">Spanish</MenuItem>
-                    <MenuItem value="fr">French</MenuItem>
-                  </TextField>
-                </ListItem>
-              </List>
-            </Paper>
-          </Grid>
-
-          {/* System Settings */}
-          <Grid item xs={12} md={6}>
-            <Paper elevation={0} sx={{ p: 3, borderRadius: 1, border: '1px solid #e0e0e0' }}>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#2d3436' }}>
-                <SecurityIcon sx={{ mr: 1, color: '#1976d2' }} />
-                System Settings
-              </Typography>
-              <List>
-                <ListItem>
-                  <ListItemIcon>
-                    <LanguageIcon sx={{ color: '#64748b' }} />
-                  </ListItemIcon>
-                  <ListItemText 
-                    primary="Timezone" 
-                    secondary="Set your local timezone"
-                  />
-                  <TextField
-                    select
-                    value={timezone}
-                    onChange={(e) => setTimezone(e.target.value)}
-                    size="small"
-                    sx={{ minWidth: 120 }}
-                  >
-                    <MenuItem value="UTC+8">UTC+8</MenuItem>
-                    <MenuItem value="UTC+0">UTC+0</MenuItem>
-                    <MenuItem value="UTC-5">UTC-5</MenuItem>
-                  </TextField>
-                </ListItem>
-              </List>
-            </Paper>
-          </Grid>
-        </Grid>
       </Box>
 
-      <Box sx={{ mt: 1.5, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button 
-          variant="contained" 
+      <Box sx={{
+        flex: 1,
+        overflow: 'auto',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 3,
+        pb: 2
+      }}>
+        <Paper elevation={0} sx={{ 
+          borderRadius: 2,
+          bgcolor: '#fff',
+          border: '1px solid #e0e0e0'
+        }}>
+          <Box sx={{ 
+            p: 3,
+            borderBottom: '1px solid #e0e0e0',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#2d3436' }}>
+              General Settings
+            </Typography>
+            <IconButton>
+              <ExpandMoreIcon />
+            </IconButton>
+          </Box>
+
+          <Box sx={{ p: 3 }}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={6}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 1, color: '#2d3436' }}>
+                    System Name
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    value={systemName}
+                    onChange={(e) => setSystemName(e.target.value)}
+                    variant="outlined"
+                    size="medium"
+                    sx={{ bgcolor: '#fff' }}
+                  />
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 1, color: '#2d3436' }}>
+                    Ticket Expiry (days)
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    value={ticketExpiry}
+                    onChange={(e) => setTicketExpiry(e.target.value)}
+                    variant="outlined"
+                    type="number"
+                    size="medium"
+                    sx={{ bgcolor: '#fff' }}
+                  />
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 1, color: '#2d3436' }}>
+                    Default Priority
+                  </Typography>
+                  <TextField
+                    select
+                    fullWidth
+                    value={defaultPriority}
+                    onChange={(e) => setDefaultPriority(e.target.value)}
+                    variant="outlined"
+                    size="medium"
+                    sx={{ bgcolor: '#fff' }}
+                  >
+                    <MenuItem value="High">High</MenuItem>
+                    <MenuItem value="Medium">Medium</MenuItem>
+                    <MenuItem value="Low">Low</MenuItem>
+                  </TextField>
+                </Box>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between',
+                  py: 1
+                }}>
+                  <Typography variant="subtitle2" sx={{ color: '#2d3436' }}>
+                    Allow Guest Tickets
+                  </Typography>
+                  <Switch
+                    checked={allowGuestTickets}
+                    onChange={(e) => setAllowGuestTickets(e.target.checked)}
+                    color="primary"
+                  />
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
+
+        <Paper elevation={0} sx={{ 
+          borderRadius: 2,
+          bgcolor: '#fff',
+          border: '1px solid #e0e0e0'
+        }}>
+          <Box sx={{ 
+            p: 3,
+            borderBottom: '1px solid #e0e0e0',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#2d3436' }}>
+              Email Notifications
+            </Typography>
+            <IconButton>
+              <ExpandMoreIcon />
+            </IconButton>
+          </Box>
+        </Paper>
+
+        <Paper elevation={0} sx={{ 
+          borderRadius: 2,
+          bgcolor: '#fff',
+          border: '1px solid #e0e0e0'
+        }}>
+          <Box sx={{ 
+            p: 3,
+            borderBottom: '1px solid #e0e0e0',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: '#2d3436' }}>
+              Ticket Categories
+            </Typography>
+            <IconButton>
+              <ExpandMoreIcon />
+            </IconButton>
+          </Box>
+        </Paper>
+      </Box>
+
+      <Box sx={{ 
+        position: 'sticky',
+        bottom: 0,
+        bgcolor: '#f8f9fa',
+        pt: 2,
+        pb: 2,
+        display: 'flex', 
+        justifyContent: 'flex-end',
+        borderTop: '1px solid #e0e0e0',
+        mt: 'auto'
+      }}>
+        <Button
+          variant="contained"
           color="primary"
-          sx={{ 
-            px: 2,
+          sx={{
+            textTransform: 'none',
+            px: 3,
             py: 1,
             borderRadius: 1,
-            textTransform: 'none',
-            fontWeight: 500
+            bgcolor: '#1976d2'
           }}
         >
-          Save Changes
-          </Button>
+          Save General Settings
+        </Button>
       </Box>
     </Box>
   );
@@ -245,6 +285,10 @@ const AdminPage = () => {
   const handleTabChange = (event, newValue) => setActiveTab(newValue);
   const handleMenuClick = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
+
+  const handleTitleClick = () => {
+    setActiveTab(0); // Set active tab to Dashboard (index 0)
+  };
 
   const handleSettingsClick = () => {
     setActiveTab(3); // Navigate to Settings tab
@@ -305,12 +349,7 @@ const AdminPage = () => {
                     borderLeft: `4px solid ${stat.color}`,
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-                    '&:hover': {
-                      transform: 'translateY(-2px)',
-                      boxShadow: '0 4px 12px rgba(0,0,0,0.05)'
-                    }
+                    justifyContent: 'space-between'
                   }}
                 >
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
@@ -365,9 +404,7 @@ const AdminPage = () => {
                 height: 340,
                 display: 'flex',
                 flexDirection: 'column',
-                bgcolor: 'white',
-                transition: 'box-shadow 0.2s ease-in-out',
-                '&:hover': { boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }
+                bgcolor: 'white'
               }}>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#2d3436', fontSize: '0.875rem' }}>
                   Tickets by Category
@@ -410,9 +447,7 @@ const AdminPage = () => {
                 height: 340,
                 display: 'flex',
                 flexDirection: 'column',
-                bgcolor: 'white',
-                transition: 'box-shadow 0.2s ease-in-out',
-                '&:hover': { boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }
+                bgcolor: 'white'
               }}>
                 <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#2d3436', fontSize: '0.875rem' }}>
                   Ticket Status Distribution
@@ -462,7 +497,7 @@ const AdminPage = () => {
                     }
                   }} />
                 </Box>
-      </Paper>
+              </Paper>
             </Box>
           </>
         );
@@ -486,10 +521,19 @@ const AdminPage = () => {
       <AppBar position="static" elevation={0} sx={{ bgcolor: 'white', color: '#2d3436', borderBottom: '1px solid #e0e0e0', height: 56 }}>
         <Toolbar sx={{ px: { xs: 2, md: 3 }, minHeight: '56px !important', height: 56 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
-            <DashboardIcon sx={{ color: '#1976d2', mr: 1.5, fontSize: 24 }} />
-            <Typography variant="h6" sx={{ fontWeight: 600, color: '#2d3436', fontSize: '1.125rem', mr: 4 }}>
-              ICT Help Desk
-            </Typography>
+            <Box 
+              onClick={handleTitleClick}
+              sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                cursor: 'pointer'
+              }}
+            >
+              <DashboardIcon sx={{ color: '#1976d2', mr: 1.5, fontSize: 24 }} />
+              <Typography variant="h6" sx={{ fontWeight: 600, color: '#2d3436', fontSize: '1.125rem', mr: 4 }}>
+                ICT Help Desk
+              </Typography>
+            </Box>
             
             <Tabs value={activeTab} onChange={handleTabChange} sx={{ 
               display: { xs: 'none', md: 'flex' },
@@ -516,10 +560,10 @@ const AdminPage = () => {
           </Box>
           
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <IconButton sx={{ color: '#64748b', mr: 1, '&:hover': { bgcolor: 'rgba(0,0,0,0.04)' } }}>
+            <IconButton sx={{ color: '#64748b', mr: 1 }}>
               <NotificationsIcon />
             </IconButton>
-            <IconButton onClick={handleMenuClick} sx={{ color: '#64748b', '&:hover': { bgcolor: 'rgba(0,0,0,0.04)' } }}>
+            <IconButton onClick={handleMenuClick} sx={{ color: '#64748b' }}>
               <AccountIcon />
             </IconButton>
             <Menu
@@ -567,7 +611,7 @@ const AdminPage = () => {
           <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
             {renderContent()}
           </Box>
-    </Container>
+        </Container>
       </Box>
     </Box>
   );

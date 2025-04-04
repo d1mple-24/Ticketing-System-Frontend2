@@ -429,8 +429,7 @@ const TicketPage = () => {
     <Box sx={{ 
       height: '100%', 
       display: 'flex', 
-      flexDirection: 'column',
-      p: { xs: 1, sm: 2, md: 3 }
+      flexDirection: 'column'
     }}>
       <Box sx={{ 
         mb: { xs: 1.5, sm: 2 }, 
@@ -456,84 +455,66 @@ const TicketPage = () => {
       }}>
         <TextField
           placeholder="Search tickets..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          sx={{ flex: 1 }}
-          size={isMobile ? 'small' : 'medium'}
+          variant="outlined"
+          fullWidth
+          size="small"
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
                 <SearchIcon sx={{ color: '#64748b' }} />
               </InputAdornment>
-            ),
+            )
+          }}
+          sx={{ 
+            flex: 1,
+            bgcolor: 'white'
           }}
         />
-        <IconButton 
-          sx={{ 
+        <Button
+          variant="outlined"
+          size="small"
+          startIcon={<FilterIcon />}
+          sx={{
+            borderColor: '#e0e0e0',
             color: '#64748b',
-            alignSelf: { xs: 'flex-end', sm: 'center' }
+            width: { xs: '100%', sm: 'auto' }
           }}
         >
-          <FilterIcon />
-        </IconButton>
+          Filter
+        </Button>
       </Box>
 
-      <TableContainer 
-        component={Paper} 
-        elevation={0} 
-        sx={{ 
-          border: '1px solid #e0e0e0',
-          borderRadius: 1,
-          flex: 1,
-          overflow: 'auto',
-          '&::-webkit-scrollbar': {
-            width: '8px',
-            height: '8px',
-          },
-          '&::-webkit-scrollbar-track': {
-            background: '#f1f1f1',
-            borderRadius: '4px',
-          },
-          '&::-webkit-scrollbar-thumb': {
-            background: '#888',
-            borderRadius: '4px',
-            '&:hover': {
-              background: '#555',
-            },
-          },
-        }}
-      >
-        <Table 
-          sx={{ 
-            minWidth: 650,
-            '& .MuiTableCell-root': {
-              py: { xs: 1, sm: 1.5 },
-              px: { xs: 1, sm: 2 },
-              fontSize: { xs: '0.75rem', sm: '0.875rem' }
-            }
-          }} 
-          stickyHeader
-        >
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Title</TableCell>
-              {!isMobile && <TableCell>Category</TableCell>}
-              <TableCell>Priority</TableCell>
-              <TableCell>Status</TableCell>
-              {!isMobile && <TableCell>Date</TableCell>}
-              {!isMobile && <TableCell>Assigned To</TableCell>}
-              <TableCell align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tickets
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((ticket) => (
-                <TableRow key={ticket.id} hover>
-                  <TableCell>{ticket.id}</TableCell>
-                  <TableCell>{ticket.title}</TableCell>
-                  {!isMobile && <TableCell>{ticket.category}</TableCell>}
+      <Paper elevation={0} sx={{ 
+        flex: 1,
+        border: '1px solid #e0e0e0',
+        borderRadius: 1,
+        overflow: 'hidden'
+      }}>
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow sx={{ bgcolor: '#f8f9fa' }}>
+                <TableCell sx={{ fontWeight: 600, color: '#2d3436' }}>Ticket ID</TableCell>
+                <TableCell sx={{ fontWeight: 600, color: '#2d3436' }}>Title</TableCell>
+                <TableCell sx={{ fontWeight: 600, color: '#2d3436' }}>Category</TableCell>
+                <TableCell sx={{ fontWeight: 600, color: '#2d3436' }}>Priority</TableCell>
+                <TableCell sx={{ fontWeight: 600, color: '#2d3436' }}>Status</TableCell>
+                <TableCell sx={{ fontWeight: 600, color: '#2d3436' }}>Date</TableCell>
+                <TableCell sx={{ fontWeight: 600, color: '#2d3436' }}>Assigned To</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 600, color: '#2d3436' }}>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tickets.map((ticket) => (
+                <TableRow
+                  key={ticket.id}
+                  sx={{
+                    '&:last-child td, &:last-child th': { border: 0 }
+                  }}
+                >
+                  <TableCell sx={{ color: '#1e293b' }}>{ticket.id}</TableCell>
+                  <TableCell sx={{ color: '#1e293b' }}>{ticket.title}</TableCell>
+                  <TableCell sx={{ color: '#1e293b' }}>{ticket.category}</TableCell>
                   <TableCell>
                     <Chip
                       label={ticket.priority}
@@ -541,8 +522,7 @@ const TicketPage = () => {
                       sx={{
                         bgcolor: `${getPriorityColor(ticket.priority)}12`,
                         color: getPriorityColor(ticket.priority),
-                        fontWeight: 500,
-                        fontSize: { xs: '0.625rem', sm: '0.75rem' }
+                        fontWeight: 500
                       }}
                     />
                   </TableCell>
@@ -553,42 +533,38 @@ const TicketPage = () => {
                       sx={{
                         bgcolor: `${getStatusColor(ticket.status)}12`,
                         color: getStatusColor(ticket.status),
-                        fontWeight: 500,
-                        fontSize: { xs: '0.625rem', sm: '0.75rem' }
+                        fontWeight: 500
                       }}
                     />
                   </TableCell>
-                  {!isMobile && <TableCell>{ticket.date}</TableCell>}
-                  {!isMobile && <TableCell>{ticket.assignedTo}</TableCell>}
+                  <TableCell sx={{ color: '#1e293b' }}>{ticket.date}</TableCell>
+                  <TableCell sx={{ color: '#1e293b' }}>{ticket.assignedTo}</TableCell>
                   <TableCell align="right">
                     <IconButton
-                      size={isMobile ? "small" : "medium"}
-                      onClick={(e) => handleMenuClick(e, ticket)}
+                      onClick={(event) => handleMenuClick(event, ticket)}
+                      size="small"
                     >
-                      <MoreVertIcon fontSize={isMobile ? "small" : "medium"} />
+                      <MoreVertIcon />
                     </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={tickets.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        sx={{ 
-          mt: 1,
-          '& .MuiTablePagination-select': {
-            mr: { xs: 0, sm: 2 }
-          }
-        }}
-      />
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          component="div"
+          count={100}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          sx={{
+            borderTop: '1px solid #e0e0e0',
+            bgcolor: '#f8f9fa'
+          }}
+        />
+      </Paper>
 
       <Menu
         anchorEl={anchorEl}
@@ -597,11 +573,8 @@ const TicketPage = () => {
         PaperProps={{
           elevation: 0,
           sx: {
-            minWidth: 180,
-            '& .MuiMenuItem-root': {
-              px: 2,
-              py: 1
-            }
+            border: '1px solid #e0e0e0',
+            minWidth: 120
           }
         }}
       >
